@@ -113,16 +113,11 @@ then2:
     # body (omitted)
   j end_if             # jump unconditionally to the end (only one if statement can be taken)
 else:                  # else condition
+    # body (omitted)  
                        # here we could put j end_if but that would be redundant as the next line is just that!
 end_if:                # the end of the if statement logic your other code goes after this
 ```
-> See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C. 
-
-
-### Translation to Assembly
-1. Map high level variables to assembly registers
-```assembly
-
+> See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
 
 ## Loops
 ### `do while`
