@@ -27,7 +27,7 @@ It may help my separating as many steps of your C code as possible. For example,
 arrA[0] = arr[10];
 // or
 A = arrA[0];
-arr[10] = 10;
+arr[10] = A;
 ```
 Most of the time the translation will be easier to understand if you take the second route over the first.
 
