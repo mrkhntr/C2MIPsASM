@@ -29,9 +29,104 @@ If you need to store more than the 4 bytes of register place pointer address to 
 > **Note**
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 
+## Conditional `if-then-else`
+### Inverse Logic
+The key to translating `if-then-else` control flow is understanding the need to inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code. *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the if statement. If this is confusing, hopefully the examples will clarify.
+### C `if-then-else`
+```c
+int a = 10;
+int b = 20;
+
+if( a == b )         \\ condition
+{                    \\ then if condition is true
+  a = a + 1;         
+} else               \\ else if all conditions are false
+{
+  b = a;
+}                    \\ end of if statement
+```
+### Translation to Assembly
+1. Map high level variables to assembly registers
+```assembly
+#Maping
+## a => $s0
+## b => $s2
+```
+2. Write the structure of the conditional with labels. Include any jumping to end the if-statement.  
+```assembly
+conditional:           # if-condition
+then:                  # start of the then logic
+  j end_if             # jump unconditionally to the end (only one if statement can be taken)
+else:                  # else condition and logic
+                       # here we could put j end_if but that would be redundant as the next line is just that!
+end_if:                # the end of the if statement logic your other code goes after this
+```
+> **Why `j end_if`?** Think about how an Assembly program runs -- linearly! Here we do not want the else block to be executed if an `if` condition is already taken.
+3. Fill in logic for the conditional. **Remember* inverse logic.
+```assembly
+conditional: bne $s0, $s2, else    # if $s0 <a> != $s1 <b> jump to else
+then:                              # this will be the next line if branch above not true
+  j end_if
+else:
+end_if:
+```
+4. Add other computation to the loop and initialize registers.
+```assembly
+  li $s0, 10          # $s0 <a> = 10
+  li $s1, 20          # $s1 <b> = 20
+
+conditional: bne $s0, $s2, else    # if $s0 <a> != $s1 <b> jump to else
+then:
+  addi $s0, $s0, 1    # $s0 = $s0 + 1
+  j end_if
+else:
+  move $s1, $s0       # $s1 = $s0 (copies over value)
+end_if:               # any other code
+```
+### Have else if? Just add more labels in step 2.
+### C `if-then-else if-else`
+```c
+if( a == b )         \\ condition1
+{                    \\ then if condition1 is true
+  a = a + 1;         
+} else if ( a > b)   \\ condition2  
+{                    \\ then if condition2 is true and condition1 was not
+  b = a + 1;
+}
+ else               \\ else if all conditions are false
+{
+  b = a;
+}                    \\ end of if statement
+```
+
+Here is the structure with condition. The body of the if statements are omitted for clarity.  
+```assembly
+conditional1:           # if-condition
+  bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of ==
+then1:                  # start of the then logic
+     # body (omitted)
+  j end_if              # jump unconditionally to the end (only one if statement can be taken)
+conditional2:           # here we need two lines for inverse logic as !(a > b) == (a <= b) == ((a == b) || (a < b))
+  beq $s0, $s1, else    # if $s0 == $s1 then jump to else (note this is redundant but here for clarity of design)
+  blt $s0, $s1, else    # if $s0 < $s1 then jump to else
+then2:
+    # body (omitted)
+  j end_if             # jump unconditionally to the end (only one if statement can be taken)
+else:                  # else condition
+                       # here we could put j end_if but that would be redundant as the next line is just that!
+end_if:                # the end of the if statement logic your other code goes after this
+```
+> See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C. 
+
+
+### Translation to Assembly
+1. Map high level variables to assembly registers
+```assembly
+
+
 ## Loops
 ### `do while`
-The easiest to translate from C to Assembly is the classic `do while` loop.
+The easiest loop to translate from C to Assembly is the classic `do while` loop.
 #### C `do while`
 ```c
 int i = 0; // initialize counter
@@ -74,7 +169,7 @@ do_loop:
 condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
->**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
+>**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
 
 ### `while`
 While loops are a bit tricky as they require inverse logic (see conditionals section for inverse logic). While loop are like `do while` except they *first evaluate the condition*.
@@ -127,10 +222,10 @@ while_cond:
 j while_cond    # jump back to conditional
 end_loop:       # end of the loop
 ```
->**Note:** As before with `do while` Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
+>**Note:** As before with `do while` Even though the *init* label is not used it is best to keep it as it is a reference to initialize part of the loop and make it more readable to a human.
 
 ### `for`
-A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your *for* loop to a `while` loop and then follow the procedure for the `while` loop.
+A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop.
 #### C `for`
 ```c
 for ( init; condition; increment ) {
@@ -150,3 +245,4 @@ while (condition) {         \\ such as i < 10;
     increment               \\ such as i = i + 1;
 }                           \\end of loop
 ```
+5. Follow the steps to translate `while` loops to Assembly.
