@@ -74,7 +74,7 @@ do_loop:
 condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
->**Note:** Even though the *endloop:* label is not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
+>**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
 
 ### `while`
 While loops are a bit tricky as they require inverse logic (see conditionals section for inverse logic). While loop are like `do while` except they *first evaluate the condition*.
@@ -93,32 +93,42 @@ while(i < 10) { // condition
  ## i => $s0
 
 ```
-2. Write labels forming the outline of the loop. Note the three parts of a loop: *Body, Condition, End*.
+2. Write labels and the unconditional jump to the condition forming the outline of the loop. Note the four parts of a loop: *Initialize, Body, Condition, End*.
 
 ```assembly
-while_condition: #condition
-  #body
-j while_condition
-while_end:
+init:          # initialize variables
+while_cond:    # condition
+               # body
+j while_cond   # jump back to conditional
+end_loop:      # end of the loop
 
 ```
-3. Fill in the incrimination steps and condition logic
+> **Why `j while_cond`?** Think about how an Assembly program runs -- linearly! So we must unconditional jump back to the condition to keep our loop structure! If did not have the jump our program would go through the loop once, that doesn't sound much like a loop!
+3. Fill in the incrimination steps and condition logic. Initialize any counting registers. Note the **inverse logic** for the conditional!
 ```assembly
-do_loop:
+init: li $s0, 0 #$s0 = 0
+while_cond:
+  bgt $s0, 9, end_loop  # if $s0 > 9 then jump to end_loop   
+                        # Note the inverse of !(i < 10) == (i >= 10) === (i > 9) for integers
   addi $s0, $s0, 1  #$s0 = $s0 + 1
-condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
-endloop:
+j while_cond    # jump back to conditional
+end_loop:       # end of the loop
 ```
+> If you are confused with inverse logic see conditionals section.
+
 4. Fill in the rest of the do loop.
-This basic example doesn't have interesting task inside loop. Our finished verision looks like the following.
+This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
 ```assembly
-do_loop:
-  #here is where any other loop tasks will be executed.
+init: li $s0, 0 #$s0 = 0
+while_cond:
+  bgt $s0, 9, end_loop  # if $s0 > 9 then jump to end_loop   
+  # here other code for loop
   addi $s0, $s0, 1  #$s0 = $s0 + 1
-condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
-endloop:
+j while_cond    # jump back to conditional
+end_loop:       # end of the loop
 ```
->**Note:** Even though the *endloop:* label is not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
+>**Note:** As before with `do while` Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and it makes it easier to read by a human.
+
 
 
 
