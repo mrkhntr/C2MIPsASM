@@ -1,4 +1,4 @@
-# Design Patterns to Translating High Level C-Code to MIPs Assembly
+# <center>Design Patterns to Translating High Level C-Code to MIPs Assembly </center>
 
 <!--
 Design Guide to Translating C-code to assembly code
@@ -22,7 +22,15 @@ Outline:
 Because translating a thought to direct assembly code can be challenging. Following a strict set of rules can make the process less error prone.
 ### Design Process
 #### 1. Write your code as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of the document.
-To do this part effectively you must break up your instruction into smallest steps as possible.
+It may help my separating as many steps of your C code as possible. For example, to load a value into an array from another array you could write the follow:
+```c
+arrA[0] = arr[10];
+// or
+A = arrA[0];
+arr[10] = 10;
+```
+Most of the time the translation will be easier to understand if you take the second route over the first.
+
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
 If you need to store more than the 4 bytes of register place pointer address to the register. Address can be in the *.data* section as a label of the program or be dynamical given via sysbrk (you will need to do this for strings and arrays!).
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
@@ -89,7 +97,7 @@ end_if:               # any other code
 if( a == b )         \\ condition1
 {                    \\ then if condition1 is true
   a = a + 1;         
-} else if ( a > b)   \\ condition2  
+} else if ( a > b)   \\ condition2  !!!NEW!!!
 {                    \\ then if condition2 is true and condition1 was not
   b = a + 1;
 }
@@ -99,6 +107,7 @@ if( a == b )         \\ condition1
 }                    \\ end of if statement
 ```
 
+### Assembly Translation Summary
 Here is the structure with condition. The body of the if statements are omitted for clarity.  
 ```assembly
 conditional1:           # if-condition
@@ -225,7 +234,7 @@ A `for` loop is nothing more than an *abstracted while*. Therefore, it is best j
 ```c
 for ( init; condition; increment ) {
    \\body
-} \\ end of loop
+}  \\ end of loop
 ```
 #### Translating to C `for` to C `while`
 It is a simple matter of shifting to translate a `for` loop to a `while` loop.
@@ -236,7 +245,7 @@ It is a simple matter of shifting to translate a `for` loop to a `while` loop.
 ```c
 init                        \\ such as int i = 0;
 while (condition) {         \\ such as i < 10;
-                            \\body
+    \\ body
     increment               \\ such as i = i + 1;
 }                           \\end of loop
 ```
