@@ -16,13 +16,9 @@ Outline:
   functions
 -->
 ## Table of Contents
-**Table of Contents**
-
-- [Design Patterns to Translating High Level C-Code to MIPs Assembly ](#)
-	- [Table of Contents](#)
-	- [The Design Process](#)
-		- [Why Design?](#)
-		- [Design Process](#)
+	- [The Design Process](#The Design Process)
+		- [Why Design?](#Why Design?)
+		- [Design Process](#Design Process)
 	- [Conditional if-then-else](#)
 		- [Inverse Logic](#)
 		- [C if-then-else](#)
