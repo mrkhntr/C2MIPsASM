@@ -19,7 +19,7 @@ Outline:
  + [The Design Process](#the-design-process)
 	- [Why Design?](#why-design?)
 	- [Design Steps](#design-steps)
- + [Conditional if-then-else](#conditional-if-then-else)
+ + [Conditional: if-then-else](#conditional-if-then-else)
 	- [Inverse Logic](#inverse-logic)
  + [Loops](#loops)
 	- [do while](#do-while)
@@ -46,9 +46,9 @@ If you need to store more than the 4 bytes of register place pointer address to 
 > **Note**
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
-## Conditional `if-then-else`
+## Conditional: `if-then-else`
 ### Inverse Logic
-The key to translating `if-then-else` control flow is understanding the need to inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code. *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the if statement. If this is confusing, hopefully the examples will clarify.
+The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the `if` statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
 Using the knowledge of inverse logic we are ready to start with our first design pattern.   
@@ -119,7 +119,7 @@ if( a == b )         \\ condition1
 {                    \\ then if condition2 is true and condition1 was not
   b = a + 1;
 }
- else               \\ else if all conditions are false
+ else                \\ else if all conditions are false
 {
   b = a;
 }                    \\ end of if statement
@@ -154,7 +154,7 @@ end_if:                # the end of the if statement logic your other code goes 
 ### `do while`
 The easiest loop to translate from C to Assembly is the classic `do while` loop.
 
-#### [Example `do while` in Action](../blob/master/code/dowhileexample.asm)  
+#### [Example of `do while` in the Wild](../master/code/dowhileexample.asm)  
 
 #### C `do while`
 ```c
@@ -202,6 +202,11 @@ endloop:
 ********************************************************************************
 ### `while`
 While loops are a bit tricky as they require inverse logic (see conditionals section for inverse logic). While loop are like `do while` except they *first evaluate the condition*.
+
+#### [Example of `while` in the Wild](../master/code/for_and_while_example.asm)
+>**Note** this example first [translates a C `for`](#for) loop to a `while loop`
+>  and then translates that to the Assembly
+
 #### C `while`
 ```c
 int i = 0; // counter
@@ -255,12 +260,13 @@ end_loop:       # end of the loop
 
 ********************************************************************************
 ### `for`
-A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop.
+A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop. Through looking at the following examples this should become clear.
 #### C `for`
 ```c
-for ( init; condition; increment ) {
-   \\body
-}  \\ end of loop
+for ( init; condition; increment )     
+{                                     \\ body
+    ...                                  
+}                                     \\ end of loop
 ```
 #### Translating to C `for` to C `while`
 It is a simple matter of shifting to translate a `for` loop to a `while` loop.
@@ -270,9 +276,10 @@ It is a simple matter of shifting to translate a `for` loop to a `while` loop.
 4. Place `increment` at the end of the loop before the closing brace '}'.
 ```c
 init                        \\ such as int i = 0;
-while (condition) {         \\ such as i < 10;
-    \\ body
-    increment               \\ such as i = i + 1;
+while (condition)           \\ such as i < 10;
+{                           \\ body
+  ...                      
+  increment                 \\ such as i = i + 1;
 }                           \\end of loop
 ```
 5. Follow the steps to translate `while` loops to Assembly.
