@@ -18,13 +18,13 @@ Outline:
 ## Table of Contents
  + [The Design Process](#the-design-process)
 	- [Why Design?](#why-design?)
-	- [Design Process](#Design Process)
- + [Conditional if-then-else](#)
-	- [Inverse Logic](#)
- + [Loops](#)
-	- [do while](#)
-	- [while](#)
-	- [for](#)
+	- [Design Steps](#design-steps)
+ + [Conditional if-then-else](#conditional-if-then-else)
+	- [Inverse Logic](#inverse-logic)
+ + [Loops](#loops)
+	- [do while](#do-while)
+	- [while](#while)
+	- [for](#for)
 ********************************************************************************
 ## The Design Process
 ### Why Design?
@@ -34,7 +34,7 @@ Because translating a thought to direct assembly code can be challenging. Follow
 It may help by separating as many steps of your C code as possible. For example, see the following:
 ```c
 arrA[0] = arr[10];
-// instead do
+// instead do \/
 A = arrA[0];
 arr[10] = A;
 ```
@@ -51,7 +51,7 @@ If you need to store more than the 4 bytes of register place pointer address to 
 The key to translating `if-then-else` control flow is understanding the need to inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code. *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the if statement. If this is confusing, hopefully the examples will clarify.
 
 ********************************************************************************
-
+Using the knowledge of inverse logic we are ready to start with our first design pattern.   
 #### C `if-then-else`
 ```c
 int a = 10;
@@ -65,20 +65,26 @@ if( a == b )         \\ condition
   b = a;
 }                    \\ end of if statement
 ```
+A nuanced feature that we will have to consider in translation with the C `if` is that once an
+`if` is taken the other branches do *not* get considered, we either just go to the
+code at the end of the `if` statement or we returned within the `if`.
 #### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
-#Maping
+#Mapping
 ## a => $s0
 ## b => $s2
 ```
 2. Write the structure of the conditional with labels. Include any jumping to end the if-statement.  
 ```assembly
 conditional:           # if-condition
+
 then:                  # start of the then logic
   j end_if             # jump unconditionally to the end (only one if statement can be taken)
+
 else:                  # else condition and logic
                        # here we could put j end_if but that would be redundant as the next line is just that!
+
 end_if:                # the end of the if statement logic your other code goes after this
 ```
 > **Why `j end_if`?** Think about how an Assembly program runs -- linearly! Here we do not want the else block to be executed if an `if` condition is already taken.
@@ -103,13 +109,13 @@ else:
   move $s1, $s0       # $s1 = $s0 (copies over value)
 end_if:               # any other code
 ```
-##### Have else if? Just add more labels in step 2.
+**Have else if?** *Just add more labels in step 2.*
 #### C `if-then-else if-else`
 ```c
 if( a == b )         \\ condition1
 {                    \\ then if condition1 is true
   a = a + 1;         
-} else if ( a > b)   \\ condition2  !!!NEW!!!
+} else if ( a > b)   \\ !!!NEW!!! condition2                   !!!NEW!!!
 {                    \\ then if condition2 is true and condition1 was not
   b = a + 1;
 }
@@ -119,6 +125,7 @@ if( a == b )         \\ condition1
 }                    \\ end of if statement
 ```
 
+
 #### Assembly Translation
 Here is the structure with condition. The body of the if statements are omitted for clarity.  
 ```assembly
@@ -127,15 +134,18 @@ conditional1:           # if-condition
 then1:                  # start of the then logic
      # body (omitted)
   j end_if              # jump unconditionally to the end (only one if statement can be taken)
+
 conditional2:           # here we need two lines for inverse logic as !(a > b) == (a <= b) == ((a == b) || (a < b))
   beq $s0, $s1, else    # if $s0 == $s1 then jump to else (note this is redundant but here for clarity of design)
   blt $s0, $s1, else    # if $s0 < $s1 then jump to else
 then2:
     # body (omitted)
   j end_if             # jump unconditionally to the end (only one if statement can be taken)
+
 else:                  # else condition
     # body (omitted)  
                        # here we could put j end_if but that would be redundant as the next line is just that!
+
 end_if:                # the end of the if statement logic your other code goes after this
 ```
 > See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
@@ -143,46 +153,49 @@ end_if:                # the end of the if statement logic your other code goes 
 ## Loops
 ### `do while`
 The easiest loop to translate from C to Assembly is the classic `do while` loop.
+
+#### [Example `do while` in Action](../blob/master/code/dowhileexample.asm)  
+
 #### C `do while`
 ```c
-int i = 0; // initialize counter
-do { // executed the body at least once
-  i = i + 1; //body of the loop
-} while( i < 10 ); // conditional
-// end of loop
+int i = 0;               // initialize counter
+do {                     // executed the body *at least* once
+  i = i + 1;             // body of the loop
+} while( i < 10 );       // conditional
+...                      // end of loop
 ```
 #### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
- # Maping
+ # Mapping
  ## i => $s0
 
 ```
 2. Write labels forming the outline of the loop. Note the four parts of a loop: *Initialize, Body, Condition, End*.
 
 ```assembly
-init: # initialize variables
+init:                     # initialize variables
 do_loop:   
-            # body
-condition:  # where the loop condition will go
-endloop:    # address where the end of the loop
+                          # body
+condition:                # where the loop condition will go
+endloop:                  # address where the end of the loop
 ```
 3. Fill in the incrimination steps and condition logic. Initialize any counting variables.
 ```assembly
-init: li $s0, 0 #$s0 = 0
+init: li $s0, 0                          # $s0 = 0
 do_loop:
-  addi $s0, $s0, 1  #$s0 = $s0 + 1
-condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
+  addi $s0, $s0, 1                       #$s0 = $s0 + 1
+condition: blt $s0, 10, do_loop          #if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
 4. Fill in the rest of the do loop.
-This basic example doesn't have interesting task inside loop. Our finished verision looks like the following.
+This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
 ```assembly
-init: li $s0, 0 #$s0 = 0
+init: li $s0, 0                  #$s0 = 0
 do_loop:
-  #here is where any other loop tasks will be executed.
-  addi $s0, $s0, 1  #$s0 = $s0 + 1
-condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
+  ...                            # here is where any other loop tasks will be executed.
+  addi $s0, $s0, 1               # $s0 = $s0 + 1
+condition: blt $s0, 10, do_loop  # if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
 >**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
@@ -200,7 +213,7 @@ while(i < 10) { // condition
 #### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
- # Maping
+ # Mapping
  ## i => $s0
 
 ```
