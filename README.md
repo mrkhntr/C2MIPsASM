@@ -1,4 +1,4 @@
-# <center>Design Patterns to Translating High Level C-Code to MIPs Assembly </center>
+<h1><center>Design Patterns to Translating High Level C-Code to MIPs Assembly </center></h1>
 
 <!--
 Design Guide to Translating C-code to assembly code
@@ -17,7 +17,7 @@ Outline:
 -->
 ## Table of Contents
  + [The Design Process](#the-design-process)
-	- [Why Design?](#why-design?)
+	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
  + [Conditional: if-then-else](#conditional-if-then-else)
 	- [Inverse Logic](#inverse-logic)
@@ -41,7 +41,7 @@ arr[10] = A;
 Most of the time this type of translation will be easier to understand if you take the second route over the first.
 
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
-If you need to store more than the 4 bytes of register place pointer address to the register. Address can be in the *.data* section as a label of the program or be dynamical given via sysbrk (you will need to do this for strings and arrays!).
+If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via sysbrk or via the stack frame.
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
 > **Note**
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
@@ -209,11 +209,12 @@ While loops are a bit tricky as they require inverse logic (see conditionals sec
 
 #### C `while`
 ```c
-int i = 0; // counter
-while(i < 10) { // condition
-   i = i + 1; // body
+int i = 0;                  // counter
+while(i < 10)               // condition
+{                           // body
+   i = i + 1;               
 }
-// end of loop
+...                         // end of loop
 ```
 #### Translation to Assembly
 1. Map high level variables to assembly registers
@@ -285,3 +286,4 @@ while (condition)           \\ such as i < 10;
 5. Follow the steps to translate `while` loops to Assembly.
 
 ********************************************************************************
+<center> Written by Mark Hunter -- Updated: February 2018 </center>
