@@ -103,8 +103,8 @@ else:
   move $s1, $s0       # $s1 = $s0 (copies over value)
 end_if:               # any other code
 ```
-### Have else if? Just add more labels in step 2.
-### C `if-then-else if-else`
+##### Have else if? Just add more labels in step 2.
+#### C `if-then-else if-else`
 ```c
 if( a == b )         \\ condition1
 {                    \\ then if condition1 is true
