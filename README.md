@@ -16,43 +16,37 @@ Outline:
   functions
 -->
 ## Table of Contents
-	- [The Design Process](#The Design Process)
-		- [Why Design?](#Why Design?)
-		- [Design Process](#Design Process)
-	- [Conditional if-then-else](#)
-		- [Inverse Logic](#)
-		- [C if-then-else](#)
-		- [Translation to Assembly](#)
-		- [Have else if? Just add more labels in step 2.](#)
-		- [C if-then-else if-else](#)
-		- [Assembly Translation Summary](#)
-	- [Loops](#)
-		- [do while](#)
-			- [C do while](#)
-		- [Translation to Assembly](#)
-		- [while](#)
-			- [C while](#)
-		- [Translation to Assembly](#)
-		- [for](#)
-			- [C for](#)
-			- [Translating to C for to C while](#)
-
+ + [The Design Process](#the-design-process)
+	- [Why Design?](#why-design?)
+	- [Design Process](#Design Process)
+ + [Conditional if-then-else](#)
+	- [Inverse Logic](#)
+	- [C if-then-else](#)
+	- [C if-then-else if-else](#)
+ + [Loops](#)
+	- [do while](#)
+	 * [C do while](#)
+	 * [Translation to Assembly](#)
+	- [while](#)
+   * [C while](#)
+	 * [Translation to Assembly](#)
+	- [for](#)
+		* [C for](#)
+		* [Translating to C for to C while](#)
+********************************************************************************
 ## The Design Process
-1. Why Design  
-2.
-3.
 ### Why Design?
 Because translating a thought to direct assembly code can be challenging. Following a strict set of rules can make the process less error prone.
-### Design Process
+### Design Steps
 #### 1. Write your code as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of the document.
-It may help my separating as many steps of your C code as possible. For example, to load a value into an array from another array you could write the follow:
+It may help by separating as many steps of your C code as possible. For example, see the following:
 ```c
 arrA[0] = arr[10];
-// or
+// instead do
 A = arrA[0];
 arr[10] = A;
 ```
-Most of the time the translation will be easier to understand if you take the second route over the first.
+Most of the time this type of translation will be easier to understand if you take the second route over the first.
 
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
 If you need to store more than the 4 bytes of register place pointer address to the register. Address can be in the *.data* section as a label of the program or be dynamical given via sysbrk (you will need to do this for strings and arrays!).
@@ -63,6 +57,9 @@ If you need to store more than the 4 bytes of register place pointer address to 
 ## Conditional `if-then-else`
 ### Inverse Logic
 The key to translating `if-then-else` control flow is understanding the need to inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code. *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the if statement. If this is confusing, hopefully the examples will clarify.
+
+********************************************************************************
+
 ### C `if-then-else`
 ```c
 int a = 10;
@@ -150,7 +147,7 @@ else:                  # else condition
 end_if:                # the end of the if statement logic your other code goes after this
 ```
 > See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
-
+********************************************************************************
 ## Loops
 ### `do while`
 The easiest loop to translate from C to Assembly is the classic `do while` loop.
@@ -197,7 +194,7 @@ condition: blt $s0, 10, do_loop #if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
 >**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
-
+********************************************************************************
 ### `while`
 While loops are a bit tricky as they require inverse logic (see conditionals section for inverse logic). While loop are like `do while` except they *first evaluate the condition*.
 #### C `while`
@@ -251,6 +248,7 @@ end_loop:       # end of the loop
 ```
 >**Note:** As before with `do while` Even though the *init* label is not used it is best to keep it as it is a reference to initialize part of the loop and make it more readable to a human.
 
+********************************************************************************
 ### `for`
 A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop.
 #### C `for`
@@ -273,3 +271,5 @@ while (condition) {         \\ such as i < 10;
 }                           \\end of loop
 ```
 5. Follow the steps to translate `while` loops to Assembly.
+
+********************************************************************************
