@@ -21,18 +21,10 @@ Outline:
 	- [Design Process](#Design Process)
  + [Conditional if-then-else](#)
 	- [Inverse Logic](#)
-	- [C if-then-else](#)
-	- [C if-then-else if-else](#)
  + [Loops](#)
 	- [do while](#)
-	 * [C do while](#)
-	 * [Translation to Assembly](#)
 	- [while](#)
-   * [C while](#)
-	 * [Translation to Assembly](#)
 	- [for](#)
-		* [C for](#)
-		* [Translating to C for to C while](#)
 ********************************************************************************
 ## The Design Process
 ### Why Design?
@@ -53,14 +45,14 @@ If you need to store more than the 4 bytes of register place pointer address to 
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
 > **Note**
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
-
+********************************************************************************
 ## Conditional `if-then-else`
 ### Inverse Logic
 The key to translating `if-then-else` control flow is understanding the need to inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code. *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the if statement. If this is confusing, hopefully the examples will clarify.
 
 ********************************************************************************
 
-### C `if-then-else`
+#### C `if-then-else`
 ```c
 int a = 10;
 int b = 20;
@@ -73,7 +65,7 @@ if( a == b )         \\ condition
   b = a;
 }                    \\ end of if statement
 ```
-### Translation to Assembly
+#### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
 #Maping
@@ -127,7 +119,7 @@ if( a == b )         \\ condition1
 }                    \\ end of if statement
 ```
 
-### Assembly Translation Summary
+#### Assembly Translation
 Here is the structure with condition. The body of the if statements are omitted for clarity.  
 ```assembly
 conditional1:           # if-condition
@@ -159,7 +151,7 @@ do { // executed the body at least once
 } while( i < 10 ); // conditional
 // end of loop
 ```
-### Translation to Assembly
+#### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
  # Maping
@@ -205,7 +197,7 @@ while(i < 10) { // condition
 }
 // end of loop
 ```
-### Translation to Assembly
+#### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
  # Maping
