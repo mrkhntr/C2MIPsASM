@@ -16,8 +16,35 @@ Outline:
   functions
 -->
 ## Table of Contents
+**Table of Contents**
+
+- [Design Patterns to Translating High Level C-Code to MIPs Assembly ](#)
+	- [Table of Contents](#)
+	- [The Design Process](#)
+		- [Why Design?](#)
+		- [Design Process](#)
+	- [Conditional if-then-else](#)
+		- [Inverse Logic](#)
+		- [C if-then-else](#)
+		- [Translation to Assembly](#)
+		- [Have else if? Just add more labels in step 2.](#)
+		- [C if-then-else if-else](#)
+		- [Assembly Translation Summary](#)
+	- [Loops](#)
+		- [do while](#)
+			- [C do while](#)
+		- [Translation to Assembly](#)
+		- [while](#)
+			- [C while](#)
+		- [Translation to Assembly](#)
+		- [for](#)
+			- [C for](#)
+			- [Translating to C for to C while](#)
 
 ## The Design Process
+1. Why Design  
+2.
+3.
 ### Why Design?
 Because translating a thought to direct assembly code can be challenging. Following a strict set of rules can make the process less error prone.
 ### Design Process

@@ -31,6 +31,8 @@
 ## i    => $s1 // the counter
 ## out  => $s2 // the value at a point of the register
 
+.gobl main                 # needed for real MIPS machines not for simulations
+
 .data
 
 	v: .half 5, 7, 1, 4, 3   # short int v[] = {5, 7, 1, 4, 3}
