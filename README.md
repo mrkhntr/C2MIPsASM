@@ -52,7 +52,7 @@ The key to translating `if-then-else` and [looping](#loops) control flow is unde
 
 ********************************************************************************
 Using the knowledge of inverse logic we are ready to start with our first design pattern.   
-#### C `if-then-else`
+#### Example C `if-then-else`
 ```c
 int a = 10;
 int b = 20;
@@ -71,7 +71,7 @@ code at the end of the `if` statement or we returned within the `if`.
 #### Translation to Assembly
 1. Map high level variables to assembly registers
 ```assembly
-#Mapping
+# Mapping
 ## a => $s0
 ## b => $s2
 ```
@@ -88,7 +88,7 @@ else:                  # else condition and logic
 end_if:                # the end of the if statement logic your other code goes after this
 ```
 > **Why `j end_if`?** Think about how an Assembly program runs -- linearly! Here we do not want the else block to be executed if an `if` condition is already taken.
-3. Fill in logic for the conditional. **Remember* inverse logic.
+3. Fill in logic for the conditional. **Remember [inverse logic](#important-note-inverse-logic)**.
 ```assembly
 conditional: bne $s0, $s2, else    # if $s0 <a> != $s1 <b> jump to else
 then:                              # this will be the next line if branch above not true
@@ -109,8 +109,8 @@ else:
   move $s1, $s0       # $s1 = $s0 (copies over value)
 end_if:               # any other code
 ```
-**Have else if?** *Just add more labels in step 2.*
-#### C `if-then-else if-else`
+#### **Have else if?** *Just add more labels in step 2.*
+#### Extended Example C `if-then-else if-else` (More Elaborate Example from Above)
 ```c
 if( a == b )         \\ condition1
 {                    \\ then if condition1 is true
@@ -127,7 +127,7 @@ if( a == b )         \\ condition1
 
 
 #### Assembly Translation
-Here is the structure with condition. The body of the if statements are omitted for clarity.  
+Here is the structure with the extra condition as shown in the extended C example. The body of the if statements are omitted for clarity.  
 ```assembly
 conditional1:           # if-condition
   bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of ==
@@ -148,7 +148,7 @@ else:                  # else condition
 
 end_if:                # the end of the if statement logic your other code goes after this
 ```
-> See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
+> **Big Idea:** See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
 ********************************************************************************
 ## Loops
 ### `do while`
@@ -244,7 +244,7 @@ while_cond:
 j while_cond    # jump back to conditional
 end_loop:       # end of the loop
 ```
-> If you are confused with inverse logic see conditionals section.
+> If you are confused with [inverse logic](#important-note-inverse-logic) see conditionals section.
 
 4. Fill in the rest of the `while` loop.
 This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
