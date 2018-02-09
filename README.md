@@ -201,7 +201,7 @@ endloop:
 >**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
 ********************************************************************************
 ### `while`
-While loops are a bit tricky as they require inverse logic (see conditionals section for inverse logic). While loop are like `do while` except they *first evaluate the condition*.
+While loops are a bit tricky as they require [inverse logic](#important-note-inverse-logic). While loop are like `do while` except they *first evaluate the condition*.
 
 #### [Example of `while` in the Wild](../master/code/for_and_while_example.asm)
 >**Note** this example first [translates a C `for`](#for) loop to a `while loop`
@@ -234,7 +234,7 @@ end_loop:      # end of the loop
 
 ```
 > **Why `j while_cond`?** Think about how an Assembly program runs -- linearly! So we must unconditional jump back to the condition to keep our loop structure! If did not have the jump our program would go through the loop once, that doesn't sound much like a loop!
-3. Fill in the incrimination steps and condition logic. Initialize any counting registers. Note the **inverse logic** for the conditional!
+3. Fill in the incrimination steps and condition logic. Initialize any counting registers. Note the **[inverse logic](#important-note-inverse-logic)** for the conditional!
 ```assembly
 init: li $s0, 0 #$s0 = 0
 while_cond:
