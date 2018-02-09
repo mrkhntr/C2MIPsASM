@@ -19,8 +19,10 @@ Outline:
  + [The Design Process](#the-design-process)
 	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
- + [Conditional: if-then-else](#conditional-if-then-else)
+ + [Conditionals](#conditionals)
 	- [Important Note: Inverse Logic](#important-note-inverse-logic)
+  - [if-then-else](#if-then-else)
+  - [Extended Example](#if-then-else-if-else)
  + [Loops](#loops)
 	- [do while](#do-while)
 	- [while](#while)
@@ -46,11 +48,12 @@ If you need to store more than the 4 bytes that a MIPS register holds (e.g. for 
 > **Note**
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
-## Conditional: `if-then-else`
+## Conditionals
 ### Important Note: Inverse Logic
 The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the `if` statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
+### `if-then-else`
 Using the knowledge of inverse logic we are ready to start with our first design pattern.   
 #### Example C `if-then-else`
 ```c
@@ -109,7 +112,9 @@ else:
   move $s1, $s0       # $s1 = $s0 (copies over value)
 end_if:               # any other code
 ```
+
 #### **Have else if?** *Just add more labels in step 2.*
+### `if-then-else-if-else`
 #### Extended Example C `if-then-else if-else` (More Elaborate Example from Above)
 ```c
 if( a == b )         \\ condition1
@@ -127,7 +132,7 @@ if( a == b )         \\ condition1
 
 
 #### Assembly Translation
-Here is the structure with the extra condition as shown in the extended C example. The body of the if statements are omitted for clarity.  
+Here is the structure with the extra condition as shown in the [extended C example](#extended-example-c-if-then-else-if-else-more-elaborate-example-from-above). The bodies of the if statements are omitted for clarity.  
 ```assembly
 conditional1:           # if-condition
   bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of ==
