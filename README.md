@@ -20,7 +20,7 @@ Outline:
 	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
  + [Conditional: if-then-else](#conditional-if-then-else)
-	- [Important Note: Inverse Logic](#important-note:-inverse-logic)
+	- [Important Note: Inverse Logic](#important-note-inverse-logic)
  + [Loops](#loops)
 	- [do while](#do-while)
 	- [while](#while)
