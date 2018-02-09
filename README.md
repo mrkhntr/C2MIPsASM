@@ -1,4 +1,4 @@
-<h1><center>Design Patterns to Translating High Level C-Code to MIPs Assembly </center></h1>
+<h1><center>Design Patterns to Translating High Level C-Code to MIPS Assembly </center></h1>
 
 <!--
 Design Guide to Translating C-code to assembly code
@@ -20,7 +20,7 @@ Outline:
 	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
  + [Conditional: if-then-else](#conditional-if-then-else)
-	- [Inverse Logic](#inverse-logic)
+	- [Important Note: Inverse Logic](#important-note:-inverse-logic)
  + [Loops](#loops)
 	- [do while](#do-while)
 	- [while](#while)
@@ -47,7 +47,7 @@ If you need to store more than the 4 bytes that a MIPS register holds (e.g. for 
 > it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditional: `if-then-else`
-### Inverse Logic
+### Important Note: Inverse Logic
 The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the `if` statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
