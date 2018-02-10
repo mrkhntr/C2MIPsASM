@@ -20,7 +20,7 @@ Outline:
 	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
  + [Conditionals](#conditionals)
-	- [Important Note: Inverse Logic](#important-note-inverse-logic)
+  - [Important Note: Inverse Logic](#important-note-inverse-logic)
   - [if-then-else](#if-then-else)
   - [Extended Example](#if-then-else-if-else)
  + [Loops](#loops)
@@ -32,7 +32,7 @@ Outline:
 ### Why Design?
 Because translating a thought to direct assembly code can be challenging. Following a strict set of rules can make the process less error prone.
 ### Design Steps
-#### 1. Write your code as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of the document.
+#### 1. Express the solution to the coding problem as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of the document.
 It may help by separating as many steps of your C code as possible. For example, see the following:
 ```c
 arrA[0] = arr[10];
@@ -45,8 +45,8 @@ Most of the time this type of translation will be easier to understand if you ta
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
 If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via sysbrk or via the stack frame.
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
-> **Note**
-> it is best practice that *ever* line of Assembly has a comment '#' this way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
+> **Note:**
+> it is best practice that *ever* line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditionals
 ### Important Note: Inverse Logic
@@ -132,20 +132,24 @@ if( a == b )         \\ condition1
 
 
 #### Assembly Translation
-Here is the structure with the extra condition as shown in the [extended C example](#extended-example-c-if-then-else-if-else-more-elaborate-example-from-above). The bodies of the if statements are omitted for clarity.  
+Here is the structure with the extra condition as shown in the [extended C example](#extended-example-c-if-then-else-if-else-more-elaborate-example-from-above). The bodies of the if statements are omitted for clarity. The changes we made are:
+1. Change the jumping logic for the first `if` branch so we jump to the second (else-if) branch.   
+2. Add the logic for the second `if` branch in a similar fashion we did to the first.
 ```assembly
 conditional1:           # if-condition
-  bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of ==
+  bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of == ## NEW LOGIC!!!
 then1:                  # start of the then logic
      # body (omitted)
   j end_if              # jump unconditionally to the end (only one if statement can be taken)
 
+## NEW SECTION
 conditional2:           # here we need two lines for inverse logic as !(a > b) == (a <= b) == ((a == b) || (a < b))
   beq $s0, $s1, else    # if $s0 == $s1 then jump to else (note this is redundant but here for clarity of design)
   blt $s0, $s1, else    # if $s0 < $s1 then jump to else
 then2:
     # body (omitted)
   j end_if             # jump unconditionally to the end (only one if statement can be taken)
+## NEW SECTION
 
 else:                  # else condition
     # body (omitted)  
@@ -157,7 +161,7 @@ end_if:                # the end of the if statement logic your other code goes 
 ********************************************************************************
 ## Loops
 ### `do while`
-The easiest loop to translate from C to Assembly is the classic `do while` loop.
+The easiest loop to translate from C to Assembly is the classic `do while` loop. This is the easiest as we execute the loop at least once and then evaluate the logic.
 
 #### [Example of `do while` in the Wild](../master/code/dowhileexample.asm)  
 
@@ -170,7 +174,7 @@ do {                     // executed the body *at least* once
 ...                      // end of loop
 ```
 #### Translation to Assembly
-1. Map high level variables to assembly registers
+1. Map high level variables to assembly registers.
 ```assembly
  # Mapping
  ## i => $s0
@@ -209,7 +213,7 @@ endloop:
 While loops are a bit tricky as they require [inverse logic](#important-note-inverse-logic). While loop are like `do while` except they *first evaluate the condition*.
 
 #### [Example of `while` in the Wild](../master/code/for_and_while_example.asm)
->**Note** this example first [translates a C `for`](#for) loop to a `while loop`
+>**Note:** this example first [translates a C `for`](#for) loop to a `while loop`
 >  and then translates that to the Assembly
 
 #### C `while`
@@ -279,7 +283,7 @@ It is a simple matter of shifting to translate a `for` loop to a `while` loop.
 1. Change `for` to `while`.
 2. Place `init` on the outside of the loop. This belongs here as it is executed first and only once.
 3. `condition` stays within the statement of the `while`.
-4. Place `increment` at the end of the loop before the closing brace '}'.
+4. Place `increment` at the end of the loop before the closing brace `}`.
 ```c
 init                        \\ such as int i = 0;
 while (condition)           \\ such as i < 10;
