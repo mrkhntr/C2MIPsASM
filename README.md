@@ -72,7 +72,7 @@ if( a == b )         \\ condition
 `if` is taken the other branches do *not* get considered, we either just go to the
 code at the end of the `if` statement or we returned within the `if`.
 #### Translation to Assembly
-1. Map high level variables to assembly registers
+1. Map high level variables to assembly registers.
 ```assembly
 # Mapping
 ## a => $s0
@@ -230,7 +230,7 @@ while(i < 10)               // condition
 ...                         // end of loop
 ```
 #### Translation to Assembly
-1. Map high level variables to assembly registers
+1. Map high level variables to assembly registers.
 ```assembly
  # Mapping
  ## i => $s0
