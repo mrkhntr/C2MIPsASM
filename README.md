@@ -43,18 +43,18 @@ arr[10] = A;
 Most of the time this type of translation will be easier to understand if you take the second route over the first.
 
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
-If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via sysbrk or via the stack frame.
+If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame.
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
 > **Note:**
 > it is best practice that *ever* line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditionals
-###Important Note: Inverse Logic
+### Important Note: Inverse Logic
 The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
 ### `if-then-else`
-Using the knowledge of inverse logic we are ready to start with our first design pattern.   
+Using the knowledge of inverse logic we are ready to start with our first design pattern, `if-then-else` control flow!   
 #### Example C `if-then-else`
 ```c
 int a = 10;
