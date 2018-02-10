@@ -185,7 +185,7 @@ do {                     // executed the body *at least* once
 2. Write labels forming the outline of the loop. Note the four parts of a loop: *Initialize, Body, Condition, End*.
 
 ```assembly
-init:                     # initialize variables
+init:                     # initialize variables such as a counter
 do_loop:   
                           # body
 condition:                # where the loop condition will go
@@ -193,9 +193,9 @@ endloop:                  # address where the end of the loop
 ```
 3. Fill in the incrimination steps and condition logic. Initialize any counting variables.
 ```assembly
-init: li $s0, 0                          # $s0 = 0
+init: li $s0, 0                          # $s0 = 0, init counter
 do_loop:
-  addi $s0, $s0, 1                       #$s0 = $s0 + 1
+  addi $s0, $s0, 1                       #$s0 = $s0 + 1 incrimination
 condition: blt $s0, 10, do_loop          #if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
@@ -239,7 +239,7 @@ while(i < 10)               // condition
 2. Write labels and the unconditional jump to the condition forming the outline of the loop. Note the four parts of a loop: *Initialize, Body, Condition, End*.
 
 ```assembly
-init:          # initialize variables
+init:          # initialize variables such as a counter 
 while_cond:    # condition
                # body
 j while_cond   # jump back to conditional
@@ -249,13 +249,14 @@ end_loop:      # end of the loop
 > **Why `j while_cond`?** Think about how an Assembly program runs -- linearly! So we must unconditional jump back to the condition to keep our loop structure! If did not have the jump our program would go through the loop once, that doesn't sound much like a loop!
 3. Fill in the incrimination steps and condition logic. Initialize any counting registers. Note the **[inverse logic](#important-note-inverse-logic)** for the conditional!
 ```assembly
-init: li $s0, 0 #$s0 = 0
+init: li $s0, 0                     # $s0 = 0, init counter
+
 while_cond:
-  bgt $s0, 9, end_loop  # if $s0 > 9 then jump to end_loop   
-                        # Note !(i < 10) == (i >= 10) === (i > 9) for integers
-  addi $s0, $s0, 1  #$s0 = $s0 + 1
-j while_cond    # jump back to conditional
-end_loop:       # end of the loop
+  bgt $s0, 9, end_loop              # if $s0 > 9 then jump to end_loop   
+                                    # *NOTE* !(i < 10) == (i >= 10) === (i > 9) for integers
+  addi $s0, $s0, 1                  # $s0 = $s0 + 1 incrimination
+j while_cond                        # jump back to conditional
+end_loop:                           # end of the loop
 ```
 > If you are confused with [inverse logic](#important-note-inverse-logic) see conditionals section.
 
@@ -266,7 +267,7 @@ init: li $s0, 0 #$s0 = 0
 
 while_cond:
   bgt $s0, 9, end_loop              # if $s0 > 9 then jump to end_loop   
-  ...                               # here other code for loop
+  ...                               # here other code for loop can go if we had any
   addi $s0, $s0, 1  #$s0 = $s0 + 1
 
 j while_cond                        # jump back to conditional
