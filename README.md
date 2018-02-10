@@ -282,7 +282,7 @@ A `for` loop is nothing more than an *abstracted while*. Therefore, it is best j
 
 #### [Example of `for` to `while` in the Wild](../master/code/for_and_while_example.asm)
 
-#### C `for`
+#### C `for` Example
 
 ```c
 for ( init; condition; increment )     
@@ -292,10 +292,7 @@ for ( init; condition; increment )
 ```
 #### Translating to C `for` to C `while`
 It is a simple matter of shifting to translate a `for` loop to a `while` loop.
-1. Change `for` to `while`.
-2. Place `init` on the outside of the loop. This belongs here as it is executed first and only once.
-3. `condition` stays within the statement of the `while`.
-4. Place `increment` at the end of the loop before the closing brace `}`.
+##### C `for` Translated
 ```c
 init                        \\ such as int i = 0;
 while (condition)           \\ such as i < 10;
@@ -304,6 +301,11 @@ while (condition)           \\ such as i < 10;
   increment                 \\ such as i = i + 1;
 }                           \\end of loop
 ```
+##### `for` -> `while` Steps
+1. Change `for` to `while`.
+2. Place `init` on the outside of the loop. This belongs here as it is executed first and only once.
+3. `condition` stays within the statement of the `while`.
+4. Place `increment` at the end of the loop before the closing brace `}`.
 5. Follow the steps to translate `while` loops to Assembly.
 
 ********************************************************************************
