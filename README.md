@@ -16,14 +16,14 @@ Outline:
   functions
 -->
 ## Table of Contents
- + [The Design Process](#the-design-process)
+ * [The Design Process](#the-design-process)
 	- [Why Design?](#why-design)
 	- [Design Steps](#design-steps)
- + [Conditionals](#conditionals)
+ * [Conditionals](#conditionals)
   - [Important Note: Inverse Logic](#important-note-inverse-logic)
   - [if-then-else](#if-then-else)
   - [Extended Example](#if-then-else-if-else)
- + [Loops](#loops)
+ * [Loops](#loops)
 	- [do while](#do-while)
 	- [while](#while)
 	- [for](#for)
