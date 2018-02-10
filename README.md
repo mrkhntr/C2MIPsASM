@@ -202,11 +202,13 @@ endloop:
 4. Fill in the rest of the do loop.
 This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
 ```assembly
-init: li $s0, 0                  #$s0 = 0
+init: li $s0, 0                     #$s0 = 0
 do_loop:
-  ...                            # here is where any other loop tasks will be executed.
-  addi $s0, $s0, 1               # $s0 = $s0 + 1
-condition: blt $s0, 10, do_loop  # if $s0 <i> < 10  then jump to do_loop label
+  ...                               # here is where any other loop tasks will be executed.
+  addi $s0, $s0, 1                  # $s0 = $s0 + 1
+
+condition: blt $s0, 10, do_loop     # if $s0 <i> < 10  then jump to do_loop label
+
 endloop:
 ```
 >**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
@@ -261,12 +263,15 @@ end_loop:       # end of the loop
 This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
 ```assembly
 init: li $s0, 0 #$s0 = 0
+
 while_cond:
-  bgt $s0, 9, end_loop  # if $s0 > 9 then jump to end_loop   
-  # here other code for loop
+  bgt $s0, 9, end_loop              # if $s0 > 9 then jump to end_loop   
+  ...                               # here other code for loop
   addi $s0, $s0, 1  #$s0 = $s0 + 1
-j while_cond    # jump back to conditional
-end_loop:       # end of the loop
+
+j while_cond                        # jump back to conditional
+
+end_loop:                           # end of the loop
 ```
 >**Note:** As before with `do while` Even though the *init* label is not used it is best to keep it as it is a reference to initialize part of the loop and make it more readable to a human.
 
