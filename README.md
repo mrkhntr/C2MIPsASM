@@ -68,7 +68,7 @@ if( a == b )         \\ condition
   b = a;
 }                    \\ end of if statement
 ```
-> *Note:* A nuanced feature that we will have to consider in translation with the C `if` is that once an
+> **Note:** A nuanced feature that we will have to consider in translation with the C `if` is that once an
 `if` is taken the other branches do *not* get considered, we either just go to the
 code at the end of the `if` statement or we returned within the `if`.
 #### Translation to Assembly
