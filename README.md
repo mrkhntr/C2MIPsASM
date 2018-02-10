@@ -49,8 +49,8 @@ If you need to store more than the 4 bytes that a MIPS register holds (e.g. for 
 > it is best practice that *ever* line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditionals
-### Important Note: Inverse Logic
-The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the `if` statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
+<h3 style="color: red;"> Important Note: Inverse Logic </h3>
+The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
 ### `if-then-else`
