@@ -46,15 +46,19 @@ Most of the time this type of translation will be easier to understand if you ta
 If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame.
 #### 3.  Write your assembly in a [MIPS editor](http://courses.missouristate.edu/KenVollmar/mars/). Using the C pseudo code and *this design guide*!
 > **Note:**
-> it is best practice that almost every instruction line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
+> it is best practice that almost every instruction line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further, every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditionals
+*******************************************************************
 ### Important Note: Inverse Logic
 The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
 
 ********************************************************************************
 ### `if-then-else`
-Using the knowledge of inverse logic we are ready to start with our first design pattern, `if-then-else` control flow!   
+Using the knowledge of inverse logic we are ready to start with our first design pattern, `if-then-else` control flow!
+> **Key Observance:** A nuanced feature that we will have to consider in translation with the C `if` is that once an
+`if` is taken the other branches do *not* get considered, we either just go to the
+code at the end of the `if` statement or we returned within the `if`.  
 #### Example C `if-then-else`
 ```c
 int a = 10;
@@ -68,9 +72,7 @@ if( a == b )         \\ condition
   b = a;
 }                    \\ end of if statement
 ```
-> **Note:** A nuanced feature that we will have to consider in translation with the C `if` is that once an
-`if` is taken the other branches do *not* get considered, we either just go to the
-code at the end of the `if` statement or we returned within the `if`.
+
 #### Translation to Assembly
 1. Map high level variables to assembly registers.
 ```assembly
@@ -99,7 +101,7 @@ then:                              # this will be the next line if branch above 
 else:
 end_if:
 ```
-4. Add other computation to the loop and initialize registers.
+4. Add other computation to the `if` and initialize registers.
 ```assembly
   li $s0, 10          # $s0 <a> = 10
   li $s1, 20          # $s1 <b> = 20
@@ -214,7 +216,7 @@ endloop:
 >**Note:** Even though the *endloop*  and *init* labels are not used it is best to keep it as it is a reference to the end of the loop and initialization of data. This is useful for a human reading your code.
 ********************************************************************************
 ### `while`
-While loops are a bit tricky as they require [inverse logic](#important-note-inverse-logic). While loop are like `do while` except they *first evaluate the condition*.
+`while` loops are a bit tricky as they require [inverse logic](#important-note-inverse-logic). A `while` loop is like a `do while` except they *first evaluate the condition* not always first executing.
 
 #### [Example of `while` in the Wild](../master/code/for_and_while_example.asm)
 >**Note:** this example first [translates a C `for`](#for) loop to a `while loop`
@@ -242,7 +244,7 @@ while(i < 10)               // condition
 init:          # initialize variables such as a counter
 while_cond:    # condition
                # body
-j while_cond   # jump back to conditional
+ j while_cond  # jump back to conditional
 end_loop:      # end of the loop
 
 ```
@@ -255,7 +257,7 @@ while_cond:
   bgt $s0, 9, end_loop              # if $s0 > 9 then jump to end_loop   
                                     # *NOTE* !(i < 10) == (i >= 10) === (i > 9) for integers
   addi $s0, $s0, 1                  # $s0 = $s0 + 1 incrimination
-j while_cond                        # jump back to conditional
+  j while_cond                      # jump back to conditional
 end_loop:                           # end of the loop
 ```
 > If you are confused with [inverse logic](#important-note-inverse-logic) see conditionals section.
@@ -270,7 +272,7 @@ while_cond:
   ...                               # here other code for loop can go if we had any
   addi $s0, $s0, 1  #$s0 = $s0 + 1
 
-j while_cond                        # jump back to conditional
+  j while_cond                      # jump back to conditional
 
 end_loop:                           # end of the loop
 ```
@@ -292,6 +294,13 @@ for ( init; condition; increment )
 ```
 #### Translating to C `for` to C `while`
 It is a simple matter of shifting to translate a `for` loop to a `while` loop.
+
+##### `for` -> `while` Steps
+1. Change `for` to `while`.
+2. Place `init` on the outside of the loop. This belongs here as it is executed first and only once.
+3. `condition` stays within the statement of the `while`.
+4. Place `increment` at the end of the loop before the closing brace `}`.
+5. Follow the steps to translate `while` loops to Assembly.
 ##### C `for` Translated
 ```c
 init                        \\ such as int i = 0;
@@ -301,12 +310,7 @@ while (condition)           \\ such as i < 10;
   increment                 \\ such as i = i + 1;
 }                           \\end of loop
 ```
-##### `for` -> `while` Steps
-1. Change `for` to `while`.
-2. Place `init` on the outside of the loop. This belongs here as it is executed first and only once.
-3. `condition` stays within the statement of the `while`.
-4. Place `increment` at the end of the loop before the closing brace `}`.
-5. Follow the steps to translate `while` loops to Assembly.
+
 
 ********************************************************************************
 <center> Written by Mark Hunter -- Updated: February 2018 </center>
