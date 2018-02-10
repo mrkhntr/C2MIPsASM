@@ -44,7 +44,7 @@ Most of the time this type of translation will be easier to understand if you ta
 
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
 If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame.
-#### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
+#### 3.  Write your assembly in a [MIPS editor](http://courses.missouristate.edu/KenVollmar/mars/). Using the C pseudo code and *this design guide*!
 > **Note:**
 > it is best practice that almost every instruction line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
