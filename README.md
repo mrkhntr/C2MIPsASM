@@ -46,7 +46,7 @@ Most of the time this type of translation will be easier to understand if you ta
 If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame.
 #### 3.  Write your assembly in a MIPs editor. Using the C pseudo code and *this design guide*!
 > **Note:**
-> it is best practice that *ever* line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
+> it is best practice that almost every instruction line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further every function should have a signature comment. Doing this will make navigating your code possible to others!
 ********************************************************************************
 ## Conditionals
 ### Important Note: Inverse Logic
@@ -186,7 +186,7 @@ do {                     // executed the body *at least* once
 
 ```assembly
 init:                     # initialize variables such as a counter
-do_loop:   
+do_loop:                  # address where the loop begins
                           # body
 condition:                # where the loop condition will go
 endloop:                  # address where the end of the loop
@@ -194,12 +194,12 @@ endloop:                  # address where the end of the loop
 3. Fill in the incrimination steps and condition logic. Initialize any counting variables.
 ```assembly
 init: li $s0, 0                          # $s0 = 0, init counter
-do_loop:
-  addi $s0, $s0, 1                       #$s0 = $s0 + 1 incrimination
-condition: blt $s0, 10, do_loop          #if $s0 <i> < 10  then jump to do_loop label
+do_loop:  
+  addi $s0, $s0, 1                       # $s0 = $s0 + 1 incrimination
+condition: blt $s0, 10, do_loop          # if $s0 <i> < 10  then jump to do_loop label
 endloop:
 ```
-4. Fill in the rest of the do loop.
+4. Fill in the rest of the `do loop`.
 This basic example doesn't have interesting task inside loop. Our finished version looks like the following.
 ```assembly
 init: li $s0, 0                     #$s0 = 0
@@ -239,7 +239,7 @@ while(i < 10)               // condition
 2. Write labels and the unconditional jump to the condition forming the outline of the loop. Note the four parts of a loop: *Initialize, Body, Condition, End*.
 
 ```assembly
-init:          # initialize variables such as a counter 
+init:          # initialize variables such as a counter
 while_cond:    # condition
                # body
 j while_cond   # jump back to conditional
