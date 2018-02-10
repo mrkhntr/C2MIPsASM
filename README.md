@@ -1,4 +1,4 @@
-<h1><center>Design Patterns to Translating High Level C-Code to MIPS Assembly </center></h1>
+<h1><center>Introductory Design Patterns to Translating High Level C-Code to MIPS Assembly </center></h1>
 
 <!--
 Design Guide to Translating C-code to assembly code
