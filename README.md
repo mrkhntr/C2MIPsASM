@@ -21,12 +21,12 @@ Outline:
 	- [Design Steps](#design-steps)
 * [Conditionals](#conditionals)
   - [Important Note: Inverse Logic](#important-note-inverse-logic)
-  - [if-then-else](#if-then-else)
-  - [Extended Example](#if-then-else-if-else)
+  - [`if-then-else`](#if-then-else)
+  - [Extended Example with `else-if`](#if-then-else-if-else)
 * [Loops](#loops)
-	- [do while](#do-while)
-	- [while](#while)
-	- [for](#for)
+	- [`do while`](#do-while)
+	- [`while`](#while)
+	- [`for`](#for)
 ********************************************************************************
 ## The Design Process
 ### Why Design?
@@ -114,7 +114,9 @@ end_if:               # any other code
 ```
 
 #### **Have else if?** *Just add more labels in step 2.*
+**********************************************
 ### `if-then-else-if-else`
+This is nothing more than an extension of the steps for the `if-then-else` basic example above.
 #### Extended Example C `if-then-else if-else` (More Elaborate Example from Above)
 ```c
 if( a == b )         \\ condition1
@@ -132,9 +134,9 @@ if( a == b )         \\ condition1
 
 
 #### Assembly Translation
-Here is the structure with the extra condition as shown in the [extended C example](#extended-example-c-if-then-else-if-else-more-elaborate-example-from-above). The bodies of the if statements are omitted for clarity. The changes we made are:
-1. Change the jumping logic for the first `if` branch so we jump to the second (else-if) branch.   
-2. Add the logic for the second `if` branch in a similar fashion we did to the first.
+Here is the structure with the extra condition as shown in the [extended C example](#extended-example-c-if-then-else-if-else-more-elaborate-example-from-above). The bodies of the `if` statements are omitted for clarity. The changes we made are:
+1. Change the jumping logic for the first `if` branch so we jump to the second (else-if) branch if the first `if` branch is not executed.   
+2. Add the logic for the second `if` branch in a similar fashion we did to the first `if` branch.
 ```assembly
 conditional1:           # if-condition
   bne $s0, $s2, conditional2    # if $s0 <a> != $s1 <b> jump to conditional2, inverse logic of == ## NEW LOGIC!!!
@@ -149,7 +151,7 @@ conditional2:           # here we need two lines for inverse logic as !(a > b) =
 then2:
     # body (omitted)
   j end_if             # jump unconditionally to the end (only one if statement can be taken)
-## NEW SECTION
+## END OF NEW SECTION
 
 else:                  # else condition
     # body (omitted)  
@@ -270,8 +272,12 @@ end_loop:       # end of the loop
 
 ********************************************************************************
 ### `for`
-A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop. Through looking at the following examples this should become clear.
+A `for` loop is nothing more than an *abstracted while*. Therefore, it is best just to translate your `for` loop to a `while` loop and then follow the procedure for the `while` loop. Through looking at the following example this should become clear.
+
+#### [Example of `for` to `while` in the Wild](../master/code/for_and_while_example.asm)
+
 #### C `for`
+
 ```c
 for ( init; condition; increment )     
 {                                     \\ body
