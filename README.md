@@ -30,9 +30,9 @@ Outline:
 ********************************************************************************
 ## The Design Process
 ### Why Design?
-Because translating a thought to direct assembly code can be challenging. Following a strict set of rules can make the process less error prone.
+Because translating a thought to direct assembly code can be challenging, following a strict set of rules can make the process less error prone.
 ### Design Steps
-#### 1. Express the solution to the coding problem as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of the document.
+#### 1. Express the solution to the coding problem as you would in C language. The C language has direct parallels to assembly instructions which is discussed in the rest of this document.
 It may help by separating as many steps of your C code as possible. For example, see the following:
 ```c
 arrA[0] = arr[10];
@@ -43,7 +43,7 @@ arr[10] = A;
 Most of the time this type of translation will be easier to understand if you take the second route over the first.
 
 #### 2. Assign $sX registers for all int or char type variables you see. Try not to reuse registers as doing so may lead to confusion and errors.
-If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to a place pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame.
+If you need to store more than the 4 bytes that a MIPS register holds (e.g. for arrays or strings) you will need to place a pointer address to memory in the register. Address can be in the *.data* section or be dynamical given via `sysbrk` or via the stack frame (using `$sp`). This document doesn't go into detail about this rather, it assumes you know this some basic structure to hold data.
 #### 3.  Write your assembly in a [MIPS editor](http://courses.missouristate.edu/KenVollmar/mars/). Using the C pseudo code and *this design guide*!
 > **Note:**
 > it is best practice that almost every instruction line of Assembly has a comment `#`. This way debugging is easier and it slows you down to think about what each line does! Further, every function should have a signature comment. Doing this will make navigating your code possible to others!
@@ -51,7 +51,7 @@ If you need to store more than the 4 bytes that a MIPS register holds (e.g. for 
 ## Conditionals
 *******************************************************************
 ### Important Note: Inverse Logic
-The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and through looping through the provided example it should become clear why it is necessary.
+The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and  looking through the provided example(s) it should become clear why it is necessary.
 
 ********************************************************************************
 ### `if-then-else`
@@ -161,7 +161,7 @@ else:                  # else condition
 
 end_if:                # the end of the if statement logic your other code goes after this
 ```
-> **Big Idea:** See how this can be extend for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
+> **Big Idea:** See how this can be extended for any amount of `else-if`s. The conditional section always points to the next else-if or else (at the last else if) and before any conditional we must have a `j end_if` to exit the `if` if a condition was taken as *only one*  if condition can be taken in an `if` statement in C.
 ********************************************************************************
 ## Loops
 ### `do while`
@@ -248,7 +248,7 @@ while_cond:    # condition
 end_loop:      # end of the loop
 
 ```
-> **Why `j while_cond`?** Think about how an Assembly program runs -- linearly! So we must unconditional jump back to the condition to keep our loop structure! If did not have the jump our program would go through the loop once, that doesn't sound much like a loop!
+> **Why `j while_cond`?** Think about how an Assembly program runs -- linearly! So we must unconditional jump back to the condition to keep our loop structure! If we did not have the jump our program would go through the loop once, that doesn't sound much like a loop!
 3. Fill in the incrimination steps and condition logic. Initialize any counting registers. Note the **[inverse logic](#important-note-inverse-logic)** for the conditional!
 ```assembly
 init: li $s0, 0                     # $s0 = 0, init counter
