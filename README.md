@@ -51,11 +51,11 @@ If you need to store more than the 4 bytes that a MIPS register holds (e.g. for 
 ## Conditionals
 *******************************************************************
 ### Important Note: Inverse Logic
-The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use inverse logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and  looking through the provided example(s) it should become clear why it is necessary.
+The key to translating `if-then-else` and [looping](#loops) control flow is understanding the need to use Inverse Logic. The reasons we need to apply inverse logic to our conditionals from C to Assembly is because assembly instructions are executed linearly in order. Therefore, we want to see if we need to skip a section of our code (the body of the `if` or loop statement) otherwise execute the next instruction(s). *When the statement in our condition is false we do not execute the next line(s)* we either jump to the next condition or exit the control flow statement. This may sound confusing, but with practice and  looking through the provided example(s) it should become clear why it is necessary.
 
 ********************************************************************************
 ### `if-then-else`
-Using the knowledge of inverse logic we are ready to start with our first design pattern, `if-then-else` control flow!
+Using the knowledge of Inverse Logic(#important-note-inverse-logic) we are ready to start with our first design pattern, `if-then-else` control flow!
 > **Key Observance:** A nuanced feature that we will have to consider in translation with the C `if` is that once an
 `if` is taken the other branches do *not* get considered, we either just go to the
 code at the end of the `if` statement or we returned within the `if`.  
